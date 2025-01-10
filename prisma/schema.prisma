@@ -15,7 +15,7 @@ model User {
   lastName  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  createdProducts Product[]    @relation("Creator")
+  userProducts Product[]    @relation("Owner")
 }
 
 model Product {
@@ -28,11 +28,11 @@ model Product {
   slug            String    @unique
   quantity Int
   userId          String    
-  creator         User      @relation("Creator", fields: [userId], references: [id])
+  owner           User      @relation("Owner", fields: [userId], references: [id])
   averageRating   Int   @default(0)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
-  // categories      ProductCategory[]
+  categories      ProductCategory[]
   // saleDetails     ProductSaleDetails?
   // rentDetails     ProductRentDetails?
   // cartItems       CartItem[]
@@ -40,4 +40,20 @@ model Product {
   // ratings         Rating[]
   // wishlistItems   WishlistItem[]
   // transactions    Transaction[]
+}
+model Category {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    ProductCategory[]
+}
+
+model ProductCategory {
+  productId   Int
+  categoryId  Int
+  product     Product   @relation(fields: [productId], references: [id])
+  category    Category  @relation(fields: [categoryId], references: [id])
+
+  @@id([productId, categoryId])
 }

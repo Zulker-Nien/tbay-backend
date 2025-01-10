@@ -1,8 +1,9 @@
 import { Field, ObjectType, Int } from '@nestjs/graphql';
+import { CategoryEntity } from 'src/categories/category.entity';
 import { User } from 'src/users/user.entity';
 
 @ObjectType()
-export class Products {
+export class ProductEntity {
   @Field(() => Int)
   id: number;
 
@@ -28,10 +29,13 @@ export class Products {
   slug: string;
 
   @Field(() => User)
-  creator: User;
+  owner: User;
 
   @Field(() => Int)
   averageRating: number;
+
+  @Field(() => [CategoryEntity])
+  categories: CategoryEntity[];
 
   @Field()
   createdAt: Date;
