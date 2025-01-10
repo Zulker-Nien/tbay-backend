@@ -15,4 +15,29 @@ model User {
   lastName  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  createdProducts Product[]    @relation("Creator")
+}
+
+model Product {
+  id              Int     @id @default(autoincrement())
+  title           String
+  description     String    @db.Text
+  isAvailable     Boolean   @default(true)
+  isForSale       Boolean   @default(true)
+  isForRent       Boolean   @default(true)
+  slug            String    @unique
+  quantity Int
+  userId          String    
+  creator         User      @relation("Creator", fields: [userId], references: [id])
+  averageRating   Int   @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  // categories      ProductCategory[]
+  // saleDetails     ProductSaleDetails?
+  // rentDetails     ProductRentDetails?
+  // cartItems       CartItem[]
+  // orderItems      OrderItemDetails[]
+  // ratings         Rating[]
+  // wishlistItems   WishlistItem[]
+  // transactions    Transaction[]
 }

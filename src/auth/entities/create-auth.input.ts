@@ -20,6 +20,7 @@ export class SignUpInput {
   @MinLength(8)
   password: string;
 }
+
 @InputType()
 export class SignInInput {
   @Field()

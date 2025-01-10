@@ -6,10 +6,10 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/providers/users.service';
 import { BcryptProvider } from './providers/bcrypt.provider';
-import { TokenModel } from './models/token.model';
-import { SignInInput, SignUpInput } from './dtos/create-auth.input';
+import { TokenModel } from './entities/token.model';
+import { SignInInput, SignUpInput } from './entities/create-auth.input';
 import { User } from 'src/users/user.entity';
 
 @Injectable()

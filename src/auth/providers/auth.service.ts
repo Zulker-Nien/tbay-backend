@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { UsersService } from '../../users/users.service';
-import { SignUpInput, SignInInput } from '../dtos/create-auth.input';
-import { TokenModel } from '../models/token.model';
+import { UsersService } from '../../users/providers/users.service';
+import { SignUpInput, SignInInput } from '../entities/create-auth.input';
+import { TokenModel } from '../entities/token.model';
 import { BcryptProvider } from './bcrypt.provider';
 import { User } from 'src/users/user.entity';
 

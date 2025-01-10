@@ -1,6 +1,6 @@
 import { Resolver, Query } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UsersService } from './providers/users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { User } from './user.entity';
@@ -12,7 +12,6 @@ export class UsersResolver {
   @Query(() => User)
   @UseGuards(JwtAuthGuard)
   async me(@CurrentUser() user: User): Promise<User> {
-    console.log('Current User:', user);
     return this.userService.findByEmail(user.email);
   }
 }
