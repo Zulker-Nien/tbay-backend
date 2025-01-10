@@ -22,6 +22,8 @@ export class FetchProductsByUserProvider {
               category: true,
             },
           },
+          saleDetails: true,
+          rentDetails: true,
         },
       });
 

@@ -4,10 +4,26 @@ import {
   IsBoolean,
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
+
+@InputType()
+class ProductSaleDetails {
+  @Field(() => Int)
+  price: number;
+}
+
+@InputType()
+class ProductRentDetails {
+  @Field(() => Int)
+  price: number;
+
+  @Field(() => [String])
+  availablePeriods: string[];
+}
 
 @InputType()
 export class CreateProductsDto {
@@ -47,4 +63,12 @@ export class CreateProductsDto {
   @Field(() => [Int])
   @IsArray()
   categories: number[];
+
+  @Field(() => ProductSaleDetails, { nullable: true })
+  @IsOptional()
+  saleDetails?: ProductSaleDetails;
+
+  @Field(() => ProductRentDetails, { nullable: true })
+  @IsOptional()
+  rentDetails?: ProductRentDetails;
 }

@@ -34,6 +34,23 @@ export class MutateProductsProvider {
               },
             })),
           },
+          ...(product.isForSale &&
+            product.saleDetails && {
+              saleDetails: {
+                create: {
+                  price: product.saleDetails.price,
+                },
+              },
+            }),
+          ...(product.isForRent &&
+            product.rentDetails && {
+              rentDetails: {
+                create: {
+                  price: product.rentDetails.price,
+                  availablePeriods: product.rentDetails.availablePeriods,
+                },
+              },
+            }),
         },
         include: {
           owner: true,
@@ -42,6 +59,8 @@ export class MutateProductsProvider {
               category: true,
             },
           },
+          saleDetails: true,
+          rentDetails: true,
         },
       });
 

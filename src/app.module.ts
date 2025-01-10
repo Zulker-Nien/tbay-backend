@@ -9,6 +9,9 @@ import { PrismaService } from './prisma/prisma.service';
 import { ProductsModule } from './products/products.module';
 // import { ProductsModule } from './products/products.module';
 import { CategoriesModule } from './categories/categories.module';
+import { ProductSaleDetailsModule } from './product-sale-details/product-sale-details.module';
+import { ProductRentDetailsModule } from './product-rent-details/product-rent-details.module';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -23,6 +26,9 @@ import { CategoriesModule } from './categories/categories.module';
     PrismaModule,
     ProductsModule,
     CategoriesModule,
+    ProductSaleDetailsModule,
+    ProductRentDetailsModule,
+    SeedModule,
   ],
   providers: [PrismaService],
 })
