@@ -3,15 +3,15 @@ import { UseGuards } from '@nestjs/common';
 import { UsersService } from './providers/users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { User } from './user.entity';
+import { UserEntity } from './user.entity';
 
-@Resolver(() => User)
+@Resolver(() => UserEntity)
 export class UsersResolver {
   constructor(private userService: UsersService) {}
 
-  @Query(() => User)
+  @Query(() => UserEntity)
   @UseGuards(JwtAuthGuard)
-  async me(@CurrentUser() user: User): Promise<User> {
+  async me(@CurrentUser() user: UserEntity): Promise<UserEntity> {
     return this.userService.findByEmail(user.email);
   }
 }

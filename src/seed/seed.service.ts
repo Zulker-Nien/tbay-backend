@@ -1,4 +1,3 @@
-// src/seeding/seeding.service.ts
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 

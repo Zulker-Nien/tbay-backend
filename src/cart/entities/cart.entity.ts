@@ -1,6 +1,6 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { CartItemEntity } from './cart-item.entity';
-import { User } from 'src/users/user.entity';
+import { UserEntity } from 'src/users/user.entity';
 
 @ObjectType()
 export class CartEntity {
@@ -10,8 +10,8 @@ export class CartEntity {
   @Field()
   userId: string;
 
-  @Field(() => User)
-  user: User;
+  @Field(() => UserEntity)
+  user: UserEntity;
 
   @Field(() => Int)
   totalPrice: number;

@@ -4,7 +4,7 @@ import { CreateProductsDto } from './dtos/create-product.dto';
 import { ProductsService } from './providers/products.service';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { UseGuards } from '@nestjs/common';
+import { NotFoundException, UseGuards } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtPayload } from 'src/auth/interfaces/payload.interface';
 
@@ -25,7 +25,22 @@ export class ProductsResolver {
       where: { id: jwtPayload.sub },
     });
     if (!user) {
-      throw new Error('User not found');
+      throw new NotFoundException('User not found');
+    }
+    return this.productService.create(createProductInput, user);
+  }
+
+  @Mutation(() => ProductEntity)
+  @UseGuards(JwtAuthGuard)
+  async updateProducts(
+    @Args('updateProduct') createProductInput: CreateProductsDto,
+    @CurrentUser() jwtPayload: JwtPayload,
+  ): Promise<ProductEntity> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: jwtPayload.sub },
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
     }
     return this.productService.create(createProductInput, user);
   }
@@ -39,7 +54,7 @@ export class ProductsResolver {
       where: { id: jwtPayload.sub },
     });
     if (!user) {
-      throw new Error('User not found');
+      throw new NotFoundException('User not found');
     }
     return this.productService.fetchProductsByUser(user);
   }

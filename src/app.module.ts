@@ -12,6 +12,7 @@ import { ProductSaleDetailsModule } from './product-sale-details/product-sale-de
 import { ProductRentDetailsModule } from './product-rent-details/product-rent-details.module';
 import { SeedModule } from './seed/seed.module';
 import { CartModule } from './cart/cart.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { CartModule } from './cart/cart.module';
     ProductRentDetailsModule,
     SeedModule,
     CartModule,
+    OrdersModule
   ],
   providers: [PrismaService],
 })

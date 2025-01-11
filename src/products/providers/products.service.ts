@@ -26,4 +26,7 @@ export class ProductsService {
   public async fetchProductsByUser(user: User): Promise<ProductEntity[]> {
     return await this.fetchProductsByUserProvider.fetchProductsByUser(user);
   }
+  public async updateProduct(user: User): Promise<ProductEntity[]> {
+    return await this.fetchProductsByUserProvider.fetchProductsByUser(user);
+  }
 }

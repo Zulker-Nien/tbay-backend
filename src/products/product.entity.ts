@@ -2,8 +2,8 @@ import { Field, ObjectType, Int } from '@nestjs/graphql';
 import { CategoryEntity } from 'src/categories/category.entity';
 import { ProductRentEntity } from 'src/product-rent-details/product-rent.entity';
 import { ProductSaleEntity } from 'src/product-sale-details/product-sale.entity';
-import { User } from 'src/users/user.entity';
 import { Availability } from './enums/availability.enum';
+import { UserEntity } from 'src/users/user.entity';
 
 @ObjectType()
 export class ProductEntity {
@@ -25,8 +25,8 @@ export class ProductEntity {
   @Field()
   slug: string;
 
-  @Field(() => User)
-  owner: User;
+  @Field(() => UserEntity)
+  owner: UserEntity;
 
   @Field(() => Int)
   averageRating: number;

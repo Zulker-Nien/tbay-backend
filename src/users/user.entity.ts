@@ -2,7 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { v4 } from 'uuid';
 
 @ObjectType()
-export class User {
+export class UserEntity {
   @Field()
   id: string = v4();
 

@@ -10,7 +10,7 @@ import { UsersService } from 'src/users/providers/users.service';
 import { BcryptProvider } from './providers/bcrypt.provider';
 import { TokenModel } from './dtos/token.model';
 import { SignInInput, SignUpInput } from './dtos/auth.input';
-import { User } from 'src/users/user.entity';
+import { UserEntity } from 'src/users/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -73,7 +73,7 @@ export class AuthService {
     }
   }
 
-  private async generateTokens(user: User): Promise<TokenModel> {
+  private async generateTokens(user: UserEntity): Promise<TokenModel> {
     const payload = { sub: user.id, email: user.email };
 
     const [accessToken, refreshToken] = await Promise.all([

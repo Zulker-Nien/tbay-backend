@@ -121,7 +121,6 @@ model Order {
   id            Int   @id @default(autoincrement())
   userId        String
   totalAmount   Int
-  status        String
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   user          User      @relation(fields: [userId], references: [id])
@@ -132,10 +131,10 @@ model OrderItemDetails {
   id         Int   @id @default(autoincrement())
   orderId    Int
   productId  Int
-  buyerId       String
-  sellerId      String
-  renterId       String
-  lenderId      String
+  buyerId       String?
+  sellerId      String?
+  renterId       String?
+  lenderId      String?
   price      Int
   orderType  ItemType
   quantity   Int
@@ -144,9 +143,9 @@ model OrderItemDetails {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   order      Order     @relation(fields: [orderId], references: [id])
-  buyer         User      @relation("Buyer", fields: [buyerId], references: [id])
-  seller        User      @relation("Seller", fields: [sellerId], references: [id])
-  renter         User      @relation("Renter", fields: [renterId], references: [id])
-  lender        User      @relation("Lender", fields: [lenderId], references: [id])
+  buyer         User?      @relation("Buyer", fields: [buyerId], references: [id])
+  seller        User?      @relation("Seller", fields: [sellerId], references: [id])
+  renter         User?      @relation("Renter", fields: [renterId], references: [id])
+  lender        User?     @relation("Lender", fields: [lenderId], references: [id])
   product    Product   @relation(fields: [productId], references: [id])
 }
