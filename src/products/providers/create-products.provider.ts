@@ -5,7 +5,7 @@ import { CreateProductsDto } from '../dtos/create-product.dto';
 import { User, Availability } from '@prisma/client';
 
 @Injectable()
-export class MutateProductsProvider {
+export class CreateProductsProvider {
   constructor(private prisma: PrismaService) {}
 
   async createProduct(

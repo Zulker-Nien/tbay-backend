@@ -4,6 +4,7 @@ import {
   IsEnum,
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
@@ -11,40 +12,47 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Availability } from '../enums/availability.enum';
-import { Type } from 'class-transformer';
 import { ProductDetailsDto } from './product-details.dto';
+import { Type } from 'class-transformer';
 
 @InputType()
-export class CreateProductsDto {
-  @Field()
-  @IsString()
-  @MinLength(4)
-  @MaxLength(512)
-  @IsNotEmpty()
-  title: string;
-
-  @Field()
-  @IsString()
-  description: string;
-
-  @Field()
-  @IsNotEmpty()
-  @IsEnum(Availability)
-  available: Availability;
-
+export class UpdateProductDto {
   @Field(() => Int)
   @IsInt()
   @IsNotEmpty()
-  quantity: number;
+  id: number;
 
-  @Field()
+  @Field({ nullable: true })
   @IsString()
-  @IsNotEmpty()
-  slug: string;
+  @MinLength(4)
+  @MaxLength(512)
+  @IsOptional()
+  title?: string;
 
-  @Field(() => [Int])
+  @Field({ nullable: true })
+  @IsString()
+  @IsOptional()
+  description?: string;
+
+  @Field({ nullable: true })
+  @IsEnum(Availability)
+  @IsOptional()
+  available?: Availability;
+
+  @Field(() => Int, { nullable: true })
+  @IsInt()
+  @IsOptional()
+  quantity?: number;
+
+  @Field({ nullable: true })
+  @IsString()
+  @IsOptional()
+  slug?: string;
+
+  @Field(() => [Int], { nullable: true })
   @IsArray()
-  categories: number[];
+  @IsOptional()
+  categories?: number[];
 
   @Field(() => ProductDetailsDto, { nullable: true })
   @ValidateIf(
@@ -54,9 +62,7 @@ export class CreateProductsDto {
   )
   @ValidateNested()
   @Type(() => ProductDetailsDto)
-  @IsNotEmpty({
-    message: 'Sale details are required when availability is SALE or BOTH',
-  })
+  @IsOptional()
   saleDetails?: ProductDetailsDto;
 
   @Field(() => ProductDetailsDto, { nullable: true })
@@ -67,8 +73,6 @@ export class CreateProductsDto {
   )
   @ValidateNested()
   @Type(() => ProductDetailsDto)
-  @IsNotEmpty({
-    message: 'Rent details are required when availability is RENT or BOTH',
-  })
+  @IsOptional()
   rentDetails?: ProductDetailsDto;
 }

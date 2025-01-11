@@ -7,6 +7,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { NotFoundException, UseGuards } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtPayload } from 'src/auth/interfaces/payload.interface';
+import { UpdateProductDto } from './dtos/update-product.dto';
 
 @Resolver(() => ProductEntity)
 export class ProductsResolver {
@@ -32,17 +33,41 @@ export class ProductsResolver {
 
   @Mutation(() => ProductEntity)
   @UseGuards(JwtAuthGuard)
-  async updateProducts(
-    @Args('updateProduct') createProductInput: CreateProductsDto,
+  async updateProduct(
+    @Args('productId') productId: number,
+    @Args('updateProduct') updateProductInput: UpdateProductDto,
     @CurrentUser() jwtPayload: JwtPayload,
   ): Promise<ProductEntity> {
     const user = await this.prisma.user.findUnique({
       where: { id: jwtPayload.sub },
     });
+
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    return this.productService.create(createProductInput, user);
+
+    return this.productService.updateProduct(
+      productId,
+      updateProductInput,
+      user.id,
+    );
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtAuthGuard)
+  async deleteProduct(
+    @Args('productId') productId: number,
+    @CurrentUser() jwtPayload: JwtPayload,
+  ): Promise<boolean> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: jwtPayload.sub },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return this.productService.deleteProduct(productId, user.id);
   }
 
   @Query(() => [ProductEntity])
