@@ -1,14 +1,17 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import {
   IsArray,
-  IsBoolean,
+  IsEnum,
   IsInt,
   IsNotEmpty,
-  IsOptional,
   IsString,
   MaxLength,
   MinLength,
+  ValidateIf,
+  ValidateNested,
 } from 'class-validator';
+import { Availability } from '../enums/availability.enum';
+import { Type } from 'class-transformer';
 
 @InputType()
 class ProductSaleDetails {
@@ -20,9 +23,6 @@ class ProductSaleDetails {
 class ProductRentDetails {
   @Field(() => Int)
   price: number;
-
-  @Field(() => [String])
-  availablePeriods: string[];
 }
 
 @InputType()
@@ -39,21 +39,14 @@ export class CreateProductsDto {
   description: string;
 
   @Field()
-  @IsBoolean()
-  isAvailable: boolean;
+  @IsNotEmpty()
+  @IsEnum(Availability)
+  available: Availability;
 
   @Field(() => Int)
   @IsInt()
   @IsNotEmpty()
   quantity: number;
-
-  @Field()
-  @IsBoolean()
-  isForSale: boolean;
-
-  @Field()
-  @IsBoolean()
-  isForRent: boolean;
 
   @Field()
   @IsString()
@@ -65,10 +58,28 @@ export class CreateProductsDto {
   categories: number[];
 
   @Field(() => ProductSaleDetails, { nullable: true })
-  @IsOptional()
+  @ValidateIf(
+    (product) =>
+      product.available === Availability.SALE ||
+      product.available === Availability.BOTH,
+  )
+  @ValidateNested()
+  @Type(() => ProductSaleDetails)
+  @IsNotEmpty({
+    message: 'Sale details are required when availability is SALE or BOTH',
+  })
   saleDetails?: ProductSaleDetails;
 
   @Field(() => ProductRentDetails, { nullable: true })
-  @IsOptional()
+  @ValidateIf(
+    (product) =>
+      product.available === Availability.RENT ||
+      product.available === Availability.BOTH,
+  )
+  @ValidateNested()
+  @Type(() => ProductRentDetails)
+  @IsNotEmpty({
+    message: 'Rent details are required when availability is RENT or BOTH',
+  })
   rentDetails?: ProductRentDetails;
 }

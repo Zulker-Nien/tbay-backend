@@ -12,9 +12,6 @@ export class ProductRentEntity {
   @Field(() => Float)
   price: number;
 
-  @Field(() => [String])
-  availablePeriods: string[];
-
   @Field(() => Date)
   createdAt: Date;
 

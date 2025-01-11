@@ -3,6 +3,7 @@ import { CategoryEntity } from 'src/categories/category.entity';
 import { ProductRentEntity } from 'src/product-rent-details/product-rent.entity';
 import { ProductSaleEntity } from 'src/product-sale-details/product-sale.entity';
 import { User } from 'src/users/user.entity';
+import { Availability } from './enums/availability.enum';
 
 @ObjectType()
 export class ProductEntity {
@@ -16,16 +17,10 @@ export class ProductEntity {
   description: string;
 
   @Field()
-  isAvailable: boolean;
+  available: Availability;
 
   @Field(() => Int)
   quantity: number;
-
-  @Field()
-  isForSale: boolean;
-
-  @Field()
-  isForRent: boolean;
 
   @Field()
   slug: string;

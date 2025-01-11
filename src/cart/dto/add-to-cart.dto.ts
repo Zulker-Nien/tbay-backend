@@ -1,5 +1,13 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsDate, IsIn, IsInt, IsOptional, IsString } from 'class-validator';
+import {
+  IsDate,
+  IsEnum,
+  IsInt,
+  IsString,
+  Min,
+  ValidateIf,
+} from 'class-validator';
+import { CartItemTypes } from '../enums/cart-item-type.enum';
 
 @InputType()
 export class AddToCartDto {
@@ -9,21 +17,21 @@ export class AddToCartDto {
 
   @Field()
   @IsString()
-  @IsIn(['SALE', 'RENT'])
-  type: string;
+  @IsEnum(CartItemTypes)
+  itemType: CartItemTypes;
 
-  @Field(() => Int, { nullable: true })
-  @IsOptional()
+  @Field(() => Int)
   @IsInt()
-  rentalPeriod?: number;
+  @Min(1)
+  quantity: number;
 
   @Field({ nullable: true })
-  @IsOptional()
+  @ValidateIf((cartItem) => cartItem.itemType === CartItemTypes.RENT)
   @IsDate()
   startDate?: Date;
 
   @Field({ nullable: true })
-  @IsOptional()
+  @ValidateIf((cartItem) => cartItem.itemType === CartItemTypes.RENT)
   @IsDate()
   endDate?: Date;
 }

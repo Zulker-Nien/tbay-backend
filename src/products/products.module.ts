@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ProductsService } from './providers/products.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
-import { MutateProductsProvider } from './providers/mutate-products.provider';
+import { MutateProductsProvider } from './providers/create-products.provider';
 import { ProductsResolver } from './products.resolver';
 import { JwtModule } from '@nestjs/jwt';
 import { FetchProductsByUserProvider } from './providers/fetch-products-by-user.provider';

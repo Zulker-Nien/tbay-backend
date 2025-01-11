@@ -11,8 +11,4 @@ export class ProductRentDto {
   @IsNumber()
   @Min(0)
   price: number;
-
-  @Field(() => [String])
-  @IsNotEmpty()
-  availablePeriods: string[];
 }

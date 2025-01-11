@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { MutateProductsProvider } from './mutate-products.provider';
+import { MutateProductsProvider } from './create-products.provider';
 import { CreateProductsDto } from '../dtos/create-product.dto';
 import { FetchProductsByUserProvider } from './fetch-products-by-user.provider';
 import { ProductEntity } from '../product.entity';

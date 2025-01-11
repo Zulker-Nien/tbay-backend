@@ -13,19 +13,22 @@ model User {
   password  String
   firstName String
   lastName  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
   userProducts Product[]    @relation("Owner")
   cart           Cart[]
+  orders         Order[]
+  boughtProducts OrderItemDetails[] @relation("Buyer")
+  soldProducts   OrderItemDetails[] @relation("Seller")
+  rentedProducts OrderItemDetails[] @relation("Renter")
+  lendedProducts   OrderItemDetails[] @relation("Lender")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Product {
   id              Int     @id @default(autoincrement())
   title           String
   description     String    @db.Text
-  isAvailable     Boolean   @default(true)
-  isForSale       Boolean   @default(true)
-  isForRent       Boolean   @default(true)
+  available       Availability @default(BOTH)
   slug            String    @unique
   quantity Int
   userId          String    
@@ -37,11 +40,18 @@ model Product {
   cartItems       CartItem[]
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
-  // orderItems      OrderItemDetails[]
+  orderItems      OrderItemDetails[]
   // ratings         Rating[]
   // wishlistItems   WishlistItem[]
-  // transactions    Transaction[]
 }
+
+enum Availability {
+  SALE
+  RENT
+  BOTH
+  OUTOFSTOCK
+}
+
 model Category {
   id          Int     @id @default(autoincrement())
   name        String  @unique
@@ -59,7 +69,6 @@ model ProductCategory {
   @@id([productId, categoryId])
 }
 
-
 model ProductSaleDetails {
   id         Int    @id @default(autoincrement())
   productId  Int    @unique
@@ -72,8 +81,7 @@ model ProductSaleDetails {
 model ProductRentDetails {
   id                 Int    @id @default(autoincrement())
   productId         Int    @unique
-  price             Int
-  availablePeriods  String[]
+  price       Int
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   product           Product   @relation(fields: [productId], references: [id])
@@ -82,6 +90,7 @@ model ProductRentDetails {
 model Cart {
   id         Int    @id @default(autoincrement())
   userId     String
+  totalPrice Int
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   user       User      @relation(fields: [userId], references: [id])
@@ -92,12 +101,52 @@ model CartItem {
   id         Int    @id @default(autoincrement())
   cartId     Int
   productId  Int
-  type       String
-  rentalPeriod Int?
+  price      Int
+  quantity   Int
+  itemType   ItemType
   startDate  DateTime?
   endDate    DateTime?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   cart       Cart      @relation(fields: [cartId], references: [id])
+  product    Product   @relation(fields: [productId], references: [id])
+}
+
+enum ItemType {
+  BUY
+  RENT
+}
+
+model Order {
+  id            Int   @id @default(autoincrement())
+  userId        String
+  totalAmount   Int
+  status        String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  user          User      @relation(fields: [userId], references: [id])
+  items         OrderItemDetails[]
+}
+
+model OrderItemDetails {
+  id         Int   @id @default(autoincrement())
+  orderId    Int
+  productId  Int
+  buyerId       String
+  sellerId      String
+  renterId       String
+  lenderId      String
+  price      Int
+  orderType  ItemType
+  quantity   Int
+  startDate  DateTime?
+  endDate    DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  order      Order     @relation(fields: [orderId], references: [id])
+  buyer         User      @relation("Buyer", fields: [buyerId], references: [id])
+  seller        User      @relation("Seller", fields: [sellerId], references: [id])
+  renter         User      @relation("Renter", fields: [renterId], references: [id])
+  lender        User      @relation("Lender", fields: [lenderId], references: [id])
   product    Product   @relation(fields: [productId], references: [id])
 }

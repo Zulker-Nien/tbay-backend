@@ -13,6 +13,9 @@ export class CartEntity {
   @Field(() => User)
   user: User;
 
+  @Field(() => Int)
+  totalPrice: number;
+
   @Field(() => [CartItemEntity])
   items: CartItemEntity[];
 

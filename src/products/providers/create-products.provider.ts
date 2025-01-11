@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProductEntity } from '../product.entity';
 import { CreateProductsDto } from '../dtos/create-product.dto';
-import { User } from '@prisma/client';
+import { User, Availability } from '@prisma/client';
 
 @Injectable()
 export class MutateProductsProvider {
   constructor(private prisma: PrismaService) {}
 
   async createProduct(
-    product: CreateProductsDto,
+    input: CreateProductsDto,
     user: User,
   ): Promise<ProductEntity> {
     if (!user || !user.id) {
@@ -17,16 +17,14 @@ export class MutateProductsProvider {
     } else {
       const createdProduct = await this.prisma.product.create({
         data: {
-          title: product.title,
-          description: product.description,
-          isAvailable: product.isAvailable,
-          quantity: product.quantity,
-          isForSale: product.isForSale,
-          isForRent: product.isForRent,
-          slug: product.slug,
+          title: input.title,
+          description: input.description,
+          available: input.available,
+          quantity: input.quantity,
+          slug: input.slug,
           userId: user.id,
           categories: {
-            create: product.categories.map((categoryId) => ({
+            create: input.categories.map((categoryId) => ({
               category: {
                 connect: {
                   id: categoryId,
@@ -34,20 +32,19 @@ export class MutateProductsProvider {
               },
             })),
           },
-          ...(product.isForSale &&
-            product.saleDetails && {
+          ...((input.available === Availability.SALE || Availability.BOTH) &&
+            input.saleDetails && {
               saleDetails: {
                 create: {
-                  price: product.saleDetails.price,
+                  price: input.saleDetails.price,
                 },
               },
             }),
-          ...(product.isForRent &&
-            product.rentDetails && {
+          ...((input.available === Availability.RENT || Availability.BOTH) &&
+            input.rentDetails && {
               rentDetails: {
                 create: {
-                  price: product.rentDetails.price,
-                  availablePeriods: product.rentDetails.availablePeriods,
+                  price: input.rentDetails.price,
                 },
               },
             }),
@@ -59,8 +56,10 @@ export class MutateProductsProvider {
               category: true,
             },
           },
-          saleDetails: true,
-          rentDetails: true,
+          saleDetails:
+            input.available === (Availability.SALE || Availability.BOTH),
+          rentDetails:
+            input.available === (Availability.RENT || Availability.BOTH),
         },
       });
 

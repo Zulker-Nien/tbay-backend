@@ -7,13 +7,14 @@ import { JwtPayload } from 'src/auth/interfaces/payload.interface';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { AddToCartDto } from './dto/add-to-cart.dto';
 import { CartService } from './providers/cart.service';
+import { CartValidationGuard } from './guards/cart-validation.guard';
 
 @Resolver(() => CartEntity)
 export class CartResolver {
   constructor(private readonly cartService: CartService) {}
 
   @Mutation(() => CartItemEntity)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, CartValidationGuard)
   async addToCart(
     @Args('input') input: AddToCartDto,
     @CurrentUser() jwtPayload: JwtPayload,
