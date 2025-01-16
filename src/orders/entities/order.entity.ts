@@ -1,5 +1,5 @@
 import { Field, ObjectType, Int } from '@nestjs/graphql';
-import { OrderItemDetailsEntity } from './order-item-detail.entity';
+import { OrderItemDetailEntity } from './order-item-detail.entity';
 
 @ObjectType()
 export class OrderEntity {
@@ -21,6 +21,6 @@ export class OrderEntity {
   @Field()
   updatedAt: Date;
 
-  @Field(() => [OrderItemDetailsEntity])
-  items: OrderItemDetailsEntity[];
+  @Field(() => [OrderItemDetailEntity])
+  items: OrderItemDetailEntity[];
 }

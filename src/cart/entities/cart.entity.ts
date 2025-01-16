@@ -10,8 +10,8 @@ export class CartEntity {
   @Field()
   userId: string;
 
-  @Field(() => UserEntity)
-  user: UserEntity;
+  @Field(() => UserEntity, { nullable: true })
+  user?: UserEntity;
 
   @Field(() => Int)
   totalPrice: number;

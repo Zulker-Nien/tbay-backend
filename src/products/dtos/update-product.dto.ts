@@ -24,7 +24,7 @@ export class UpdateProductDto {
 
   @Field({ nullable: true })
   @IsString()
-  @MinLength(4)
+  @MinLength(2)
   @MaxLength(512)
   @IsOptional()
   title?: string;
@@ -43,11 +43,6 @@ export class UpdateProductDto {
   @IsInt()
   @IsOptional()
   quantity?: number;
-
-  @Field({ nullable: true })
-  @IsString()
-  @IsOptional()
-  slug?: string;
 
   @Field(() => [Int], { nullable: true })
   @IsArray()

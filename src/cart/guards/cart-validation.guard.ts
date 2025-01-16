@@ -54,16 +54,25 @@ export class CartValidationGuard implements CanActivate {
   }
 
   private async validateUserCartState(userId: string, productId: number) {
-    const existingCartItem = await this.prisma.cartItem.findFirst({
+    const existingCartItem = await this.prisma.cart.findFirst({
       where: {
-        cart: {
-          userId,
+        userId,
+        items: {
+          some: {
+            productId,
+          },
         },
-        productId,
+      },
+      include: {
+        items: {
+          where: {
+            productId,
+          },
+        },
       },
     });
 
-    if (existingCartItem) {
+    if (existingCartItem?.items.length > 0) {
       throw new BadRequestException('Product is already in your cart');
     }
   }

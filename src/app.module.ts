@@ -31,7 +31,7 @@ import { OrdersModule } from './orders/orders.module';
     ProductRentDetailsModule,
     SeedModule,
     CartModule,
-    OrdersModule
+    OrdersModule,
   ],
   providers: [PrismaService],
 })

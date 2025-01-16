@@ -1,6 +1,6 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CartEntity } from './entities/cart.entity';
-import { UseGuards } from '@nestjs/common';
+import { NotFoundException, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CartItemEntity } from './entities/cart-item.entity';
 import { JwtPayload } from 'src/auth/interfaces/payload.interface';
@@ -8,10 +8,14 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { AddToCartDto } from './dto/add-to-cart.dto';
 import { CartService } from './providers/cart.service';
 import { CartValidationGuard } from './guards/cart-validation.guard';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Resolver(() => CartEntity)
 export class CartResolver {
-  constructor(private readonly cartService: CartService) {}
+  constructor(
+    private readonly cartService: CartService,
+    private prisma: PrismaService,
+  ) {}
 
   @Mutation(() => CartItemEntity)
   @UseGuards(JwtAuthGuard, CartValidationGuard)
@@ -22,13 +26,20 @@ export class CartResolver {
     return this.cartService.addToCart(jwtPayload.sub, input);
   }
 
-  @Mutation(() => CartItemEntity)
+  @Mutation(() => CartEntity)
   @UseGuards(JwtAuthGuard)
   async removeFromCart(
-    @Args('id', { type: () => Int }) id: number,
+    @Args('cartId', { type: () => Int }) cartId: number,
     @CurrentUser() jwtPayload: JwtPayload,
   ) {
-    return this.cartService.removeFromCart(jwtPayload.sub, id);
+    const user = await this.prisma.user.findUnique({
+      where: { id: jwtPayload.sub },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return this.cartService.removeFromCart(user.id, cartId);
   }
 
   @Query(() => CartEntity, { nullable: true })

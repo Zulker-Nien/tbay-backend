@@ -14,15 +14,14 @@ export class CartService {
   ) {}
 
   async addToCart(userId: string, input: AddToCartDto) {
-    console.log('addtocart: ', userId);
     return this.addToCartProvider.addToCart(userId, input);
-  }
-
-  async removeFromCart(userId: string, cartItemId: number) {
-    return this.removeFromCartProvider.removeFromCart(userId, cartItemId);
   }
 
   async getCart(userId: string) {
     return this.fetchCartProvider.fetchCart(userId);
+  }
+
+  async removeFromCart(userId: string, cartItemId: number) {
+    return this.removeFromCartProvider.removeFromCart(userId, cartItemId);
   }
 }

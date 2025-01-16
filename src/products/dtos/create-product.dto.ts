@@ -18,7 +18,7 @@ import { ProductDetailsDto } from './product-details.dto';
 export class CreateProductsDto {
   @Field()
   @IsString()
-  @MinLength(4)
+  @MinLength(2)
   @MaxLength(512)
   @IsNotEmpty()
   title: string;
@@ -36,11 +36,6 @@ export class CreateProductsDto {
   @IsInt()
   @IsNotEmpty()
   quantity: number;
-
-  @Field()
-  @IsString()
-  @IsNotEmpty()
-  slug: string;
 
   @Field(() => [Int])
   @IsArray()

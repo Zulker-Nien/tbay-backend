@@ -13,45 +13,45 @@ export class AddToCartProvider {
   }
 
   async addToCart(userId: string, input: AddToCartDto) {
-    let cart = await this.prisma.cart.findFirst({
-      where: { userId },
-      include: {
-        items: true,
-      },
-    });
-
-    if (!cart) {
-      cart = await this.prisma.cart.create({
-        data: {
-          userId,
-          totalPrice: 0,
-        },
+    return this.prisma.$transaction(async (prisma) => {
+      let cart = await prisma.cart.findFirst({
+        where: { userId },
         include: {
           items: true,
         },
       });
-    }
 
-    const product = await this.prisma.product.findUnique({
-      where: { id: input.productId },
-      include: {
-        saleDetails: input.itemType === CartItemTypes.BUY,
-        rentDetails: input.itemType === CartItemTypes.RENT,
-      },
-    });
+      if (!cart) {
+        cart = await prisma.cart.create({
+          data: {
+            userId,
+            totalPrice: 0,
+          },
+          include: {
+            items: true,
+          },
+        });
+      }
 
-    let unitPrice: number;
-    if (input.itemType === CartItemTypes.RENT) {
-      const numberOfDays = this.calculateDays(input.startDate, input.endDate);
-      unitPrice = product.rentDetails.price * numberOfDays;
-    } else {
-      unitPrice = product.saleDetails.price;
-    }
+      const product = await prisma.product.findUnique({
+        where: { id: input.productId },
+        include: {
+          saleDetails: input.itemType === CartItemTypes.BUY,
+          rentDetails: input.itemType === CartItemTypes.RENT,
+        },
+      });
 
-    const itemTotalPrice = unitPrice * input.quantity;
-    const newCartTotal = cart.totalPrice + itemTotalPrice;
+      let unitPrice: number;
+      if (input.itemType === CartItemTypes.RENT) {
+        const numberOfDays = this.calculateDays(input.startDate, input.endDate);
+        unitPrice = product.rentDetails.price * numberOfDays;
+      } else {
+        unitPrice = product.saleDetails.price;
+      }
 
-    return this.prisma.$transaction(async (prisma) => {
+      const itemTotalPrice = unitPrice * input.quantity;
+      const newCartTotal = cart.totalPrice + itemTotalPrice;
+
       const cartItem = await prisma.cartItem.create({
         data: {
           cartId: cart.id,

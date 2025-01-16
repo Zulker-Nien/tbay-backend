@@ -21,7 +21,6 @@ export class CreateProductsProvider {
           description: input.description,
           available: input.available,
           quantity: input.quantity,
-          slug: input.slug,
           userId: user.id,
           categories: {
             create: input.categories.map((categoryId) => ({

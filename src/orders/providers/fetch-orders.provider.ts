@@ -56,9 +56,16 @@ export class FetchOrdersProvider {
       include: {
         items: {
           include: {
-            product: true,
+            product: {
+              include: {
+                saleDetails: true,
+                rentDetails: true,
+              },
+            },
             buyer: true,
             seller: true,
+            lender: true,
+            renter: true,
           },
         },
       },

@@ -1,4 +1,4 @@
-import { ObjectType, Field, Int, Float } from '@nestjs/graphql';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { ProductEntity } from 'src/products/product.entity';
 
 @ObjectType()
@@ -9,7 +9,7 @@ export class ProductRentEntity {
   @Field(() => Int)
   productId: number;
 
-  @Field(() => Float)
+  @Field(() => Int)
   price: number;
 
   @Field(() => Date)

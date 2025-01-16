@@ -22,9 +22,6 @@ export class ProductEntity {
   @Field(() => Int)
   quantity: number;
 
-  @Field()
-  slug: string;
-
   @Field(() => UserEntity)
   owner: UserEntity;
 

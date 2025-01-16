@@ -29,8 +29,8 @@ export class CartItemEntity {
   @Field({ nullable: true })
   endDate?: Date;
 
-  @Field(() => CartEntity)
-  cart: CartEntity;
+  @Field(() => CartEntity, { nullable: true })
+  cart?: CartEntity;
 
   @Field(() => ProductEntity)
   product: ProductEntity;

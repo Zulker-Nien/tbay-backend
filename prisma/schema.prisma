@@ -29,8 +29,7 @@ model Product {
   title           String
   description     String    @db.Text
   available       Availability @default(BOTH)
-  slug            String    @unique
-  quantity Int
+  quantity        Int
   userId          String    
   owner           User      @relation("Owner", fields: [userId], references: [id])
   averageRating   Int   @default(0)
@@ -41,8 +40,7 @@ model Product {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   orderItems      OrderItemDetails[]
-  // ratings         Rating[]
-  // wishlistItems   WishlistItem[]
+
 }
 
 enum Availability {

@@ -4,7 +4,7 @@ import { ProductEntity } from 'src/products/product.entity';
 import { UserEntity } from 'src/users/user.entity';
 
 @ObjectType()
-export class OrderItemDetailsEntity {
+export class OrderItemDetailEntity {
   @Field(() => Int)
   id: number;
 

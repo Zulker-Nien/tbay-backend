@@ -7,8 +7,8 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../../users/providers/users.service';
-import { SignUpInput, SignInInput } from '../dtos/auth.input';
-import { TokenModel } from '../dtos/token.model';
+import { SignUpDto, SignInDto } from '../dtos/auth.dto';
+import { TokenModel } from '../dtos/token.dto';
 import { BcryptProvider } from './bcrypt.provider';
 import { UserEntity } from 'src/users/user.entity';
 
@@ -22,7 +22,7 @@ export class AuthService {
     private readonly bcryptProvider: BcryptProvider,
   ) {}
 
-  async signUp(signUpInput: SignUpInput): Promise<TokenModel> {
+  async signUp(signUpInput: SignUpDto): Promise<TokenModel> {
     const existingUser = await this.userService.findByEmail(signUpInput.email);
     if (existingUser) {
       throw new UnauthorizedException('Email already exists');
@@ -39,7 +39,7 @@ export class AuthService {
     return this.generateTokens(user);
   }
 
-  async signIn(signInInput: SignInInput): Promise<TokenModel> {
+  async signIn(signInInput: SignInDto): Promise<TokenModel> {
     const user = await this.userService.findByEmail(signInInput.email);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
@@ -79,17 +79,18 @@ export class AuthService {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
         secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-        expiresIn: '7d',
+        expiresIn: '30m',
       }),
       this.jwtService.signAsync(payload, {
         secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-        expiresIn: '7d',
+        expiresIn: '30d',
       }),
     ]);
 
     return {
       accessToken,
       refreshToken,
+      user,
     };
   }
 }

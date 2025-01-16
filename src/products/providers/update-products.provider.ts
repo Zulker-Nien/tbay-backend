@@ -39,7 +39,6 @@ export class UpdateProductsProvider {
         description: updateProductDto.description ?? undefined,
         available: updateProductDto.available ?? undefined,
         quantity: updateProductDto.quantity ?? undefined,
-        slug: updateProductDto.slug ?? undefined,
         ...(updateProductDto.categories && {
           categories: {
             deleteMany: {},
